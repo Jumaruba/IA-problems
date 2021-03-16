@@ -1,0 +1,17 @@
+{
+  "name": "n-puzzle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "heap-js": "^2.1.4",
+    "lodash": "^4.17.21"
+  }
+}
