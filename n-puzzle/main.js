@@ -46,6 +46,29 @@ function solveAStar(curr_state) {
   } 
 }
 
+function solveGreedy(curr_state){ 
+  let open = [];
+  let children = [];
+  open.push(curr_state); 
+  while(open.length != 0){
+    
+    let curr_state = open.shift(); 
+    if (curr_state.num_at_desired_pos ===  curr_state.getBoardSize()){  
+      console.log("Number of moves", curr_state.moves.length);
+      console.log("Moves", curr_state.moves); 
+      return; 
+  }
+    children = getPuzzleChildren(curr_state); 
+    for (let i = 0; i < children.length; i++){
+      children[i].f = children[i].getHeuristic(); 
+      open = insertInArray(open, children[i]); 
+    } 
+
+
+  }
+
+}
+
 const compare = (state1, state2) => {
   return JSON.stringify(state1.board) === JSON.stringify(state2.board);
 };
@@ -101,7 +124,7 @@ let board = new NPuzzle(3, 3, [
   [4, 7, 8],
 ]); 
 
-solveAStar(board);
+solveGreedy(board);
 
 board = new NPuzzle(3,3, [[1,3,6],[5,2,0], [4,7,8]]);
 solveAStar(board);
