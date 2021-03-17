@@ -12,7 +12,7 @@
 To run this application you must have the following programs installed: 
 - [`npm`](https://www.npmjs.com/) 
 - [`nodejs`](https://nodejs.org/) 
-- 
+
 ## Installation 
 Clone the repo and goes to the desired folder (e.g example-minimax) and run:  
 ```bash
