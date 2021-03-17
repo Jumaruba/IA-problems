@@ -32,11 +32,11 @@ function solveAStar(curr_state) {
       index_closed = closed.findIndex((element) => compare(element, children[i])); 
       children[i].g = curr_state.g +1;   
       children[i].f = children[i].g + children[i].getHeuristic();   
-      if (index_open !== -1 && children[i].g < open[index_open].g) { 
-        open.splice(index_open, 1);   
+      if (index_open !== -1 && children[i].g <= open[index_open].g) { 
+        open.splice(index_open, 1);         // remove from open. 
         open = insertInArray(open, children[i]); 
-      } else if (index_closed !== -1 && children[i].g < closed[index_closed].g) {
-        closed.splice(index_closed, 1); 
+      } else if (index_closed !== -1 && children[i].g <= closed[index_closed].g) {
+        closed.splice(index_closed, 1);     // remove from closed. 
         open = insertInArray(open, children[i]); 
       } else { 
         open = insertInArray(open, children[i]);  
