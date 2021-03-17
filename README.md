@@ -32,3 +32,4 @@ $ node main.js
 
 ## Future improvements 
 In a near future all the games and examples will be implemented with a graphical interface using ReactJs.  
+
