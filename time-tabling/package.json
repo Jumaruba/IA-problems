@@ -1,5 +1,5 @@
 {
-  "name": "connect-four",
+  "name": "time-tabling",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -8,12 +8,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "eslint": "^7.22.0",
-    "lodash": "^4.17.21"
-  },
-  "devDependencies": {
-    "readline-sync": "^1.4.10"
-  }
+  "license": "ISC"
 }
