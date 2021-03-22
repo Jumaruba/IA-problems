@@ -47,7 +47,6 @@ const getRandomArray = (arrayLength) => {
  **/
 const getRandomSolution = (disciplines, slots) => {
   let randomDisc = getRandomArray(disciplines.length);
-  console.log(randomDisc);
   for (let i = 0; i < disciplines.length; i++) {
     let index = i % slots.length;
     slots[index].push(randomDisc[i]);
@@ -55,4 +54,35 @@ const getRandomSolution = (disciplines, slots) => {
   return slots;
 };
 
-console.log(getRandomSolution(disciplines, slots));
+const incompNumber = (slots, disciplines) => {
+  let repeatedNum = 0;
+  for (let i = 0; i < slots.length; i++) {
+    let students = getSlotStudents(slots, disciplines, i); // Get all the students from a slot.
+    console.log(students);
+    repeatedNum += countDuplicates(students); // Get the number of repeated students.
+  }
+  return repeatedNum;
+};
+
+const getSlotStudents = (slots, disciplines, number) => {
+  let stu = [];
+  for (let i = 0; i < slots[number].length; i++) {
+    stu = [...stu, ...disciplines[slots[number][i]]];
+  }
+  return stu;
+};
+
+const countDuplicates = (array) => {
+  let unique = [];
+  let repeatedNum = 0;
+  array.forEach((element) => {
+    if (unique.includes(element)) repeatedNum++;
+    else unique.push(element);
+  });
+  return repeatedNum;
+};
+
+let random = getRandomSolution(disciplines, slots);
+
+console.log(random);
+console.log(incompNumber(slots, disciplines));
