@@ -29,6 +29,8 @@ $ node main.js
 - Minimax  
 - Greedy search 
 - A* search 
+- Hill Climbing
+- Simulated Annealing
 
 ## Future improvements 
 In a near future all the games and examples will be implemented with a graphical interface using ReactJs.  
