@@ -1,7 +1,6 @@
 const _ = require("lodash");
 
-// Reprentation of the problem we want to solve.
-let slots = [[], [], [], []];
+let numberSlots = 4;     
 
 // The disciplines are already set.
 let disciplines = [
@@ -19,70 +18,114 @@ let disciplines = [
   [9, 10, 11, 12],
 ];
 
-const getRandomInt = (max) => {
-  return Math.floor(Math.random() * Math.floor(max));
-};
+  
+const genRandomSol = () => {
+  let numDiscliplines = disciplines.length;  
+  let sol = Array(numDiscliplines); 
+  for (let i = 0 ; i < numDiscliplines; i++)
+    sol[i] = Math.floor(Math.random() * numberSlots + 1);  
+  return sol; 
+}
+/**
+  * In a given solution, concatenate all the students for a given slot number. 
+  * @param {number} slotNum Slot number.  
+  * @param {array} possibleSol A possible solution. 
+  */
+const getStudentsSlot = (slotNum, possibleSol) => {   
+  let slot = []; 
+  for (let i = 0; i < possibleSol.length; i++){   
+    if (possibleSol[i] == slotNum) slot = [...slot, ...disciplines[i]]; 
+  }
+   return slot; 
+} 
+
+// Calculates the number of students enrolled in both disciplines. 
+const incompDisc = (disc1, disc2) =>{ 
+  let incompNum = 0;   
+  let bothStudents = [...disc1, ...disc2];   
+  // Retrieve duplicate items 
+  let duplicates = new Set(bothStudents.filter((item, index) => bothStudents.indexOf(item) !== index));  
+  return duplicates.size; 
+} 
 
 /**
- * Get a random list with unique numbers from 0..array.length
- * @param {int} arrayLength
- */
-const getRandomArray = (arrayLength) => {
-  let visited = Array(arrayLength);
-  let finalArray = [];
-  let visitedNum = 0;
-  while (visitedNum != arrayLength) {
-    let random = getRandomInt(arrayLength);
-    if (visited[random] !== 1) {
-      visited[random] = 1;
-      visitedNum++;
-      finalArray.push(random);
-    }
-  }
-  return finalArray;
-};
+  * Returns number of students with a conflict in the schedule. 
+  * @param {array} slot Concanetation of students in all the disciplines in this slot. 
+  */ 
+const incompSlot = (slot) => { 
+  let duplicates = new Set(slot.filter((item, index) => slot.indexOf(item) !== index));   
+  return duplicates.size; 
+}  
 
 /**
- * Supposing equal number of disciplines per slot
- **/
-const getRandomSolution = (disciplines, slots) => {
-  let randomDisc = getRandomArray(disciplines.length);
-  for (let i = 0; i < disciplines.length; i++) {
-    let index = i % slots.length;
-    slots[index].push(randomDisc[i]);
+  * Calculates the total number of incompabilities for a given solution. 
+  */
+const incompSolution = (solution) => {  
+  let conflicts = 0; 
+  for (let i = 0 ; i < solution.length; i++){
+    let slotStudentsConcat= getStudentsSlot(i, solution); 
+    conflicts += incompSlot(slotStudentsConcat);  
   }
-  return slots;
-};
+  return conflicts; 
+} 
 
-const incompNumber = (slots, disciplines) => {
-  let repeatedNum = 0;
-  for (let i = 0; i < slots.length; i++) {
-    let students = getSlotStudents(slots, disciplines, i); // Get all the students from a slot.
-    console.log(students);
-    repeatedNum += countDuplicates(students); // Get the number of repeated students.
-  }
-  return repeatedNum;
-};
+// Calculates a neighbor by swapping two values. 
+const neighSwap = (solution) =>{
+  let min = 0; 
+  const max = solution.length -1;       
+  let random1 = 0; 
+  let random2 = 0; 
+  do {
+    random1 = getRandomInt(max, min); 
+    random2 = getRandomInt(max, min); 
+  } while (random1 === random2 || solution[random1] === solution[random2]); 
+  
+  let temp = solution[random1]; 
+  solution[random1] = solution[random2]; 
+  solution[random2] = temp;  
+  return solution;
+} 
 
-const getSlotStudents = (slots, disciplines, number) => {
-  let stu = [];
-  for (let i = 0; i < slots[number].length; i++) {
-    stu = [...stu, ...disciplines[slots[number][i]]];
-  }
-  return stu;
-};
+// Change a value 
+const neighChange = (solution) => {  
+  let pos = getRandomInt(solution.length-1, 0); 
+  let newValue = getRandomInt(numberSlots, 1); 
+  solution[pos] = newValue; 
+  return solution; 
+} 
 
-const countDuplicates = (array) => {
-  let unique = [];
-  let repeatedNum = 0;
-  array.forEach((element) => {
-    if (unique.includes(element)) repeatedNum++;
-    else unique.push(element);
-  });
-  return repeatedNum;
-};
+// Change value and swap 
+const neighChangeSwap = (solution) => {
+  solution = neighChange(solution); 
+  solution = neighSwap(solution); 
+  return solution; 
+}
 
-let random = getRandomSolution(disciplines, slots);
+const getRandomInt = (max, min) => {
+  return Math.floor(Math.random() * (max-min+1)+min); 
+} 
 
-console.log(random);
-console.log(incompNumber(slots, disciplines));
+
+// SOLVING METHODS 
+const HillClimbing = (initSolution) => {  
+  let counter = 0;  
+  let bestSolUntilNow = initSolution; 
+  do{  
+    counter ++; 
+    let tempSol = neighChangeSwap([...bestSolUntilNow]);    
+    if (incompSolution(bestSolUntilNow) > incompSolution(tempSol)){   
+      bestSolUntilNow = [...tempSol]; 
+      counter = 0; 
+    } 
+  }while(counter < 1000);  
+  return bestSolUntilNow; 
+
+} 
+
+
+let randomSol = genRandomSol();     
+let solution = HillClimbing(randomSol);
+console.log(solution); 
+console.log(incompSolution(solution)); 
+console.log(HillClimbing(randomSol));  
+
